@@ -4,12 +4,25 @@ import pickle
 import requests
 import pycountry
 import json
+import altair as alt
 from streamlit_option_menu import option_menu
 
 url = 'http://localhost:11434/api/chat'
 headers = {'Content-Type': 'application/json'}
 
 model = pickle.load(open('model/model_rf.pkl', 'rb'))
+
+def classify_air_quality(value, unit):
+    if unit == 'ppm':
+        if value < 50:
+            return 'Healthy'
+        elif value < 100:
+            return 'Normal'
+        else:
+            return 'Unhealthy'
+    else:
+        return 'Tidak Diketahui'
+
 
 def create_prompt(hasil_prediksi, country):
     if hasil_prediksi == 'healthy':
@@ -54,12 +67,19 @@ def extract_relevant_text(response_text):
     return '\n'.join(relevant_lines)
 
 def main():
+    try:
+        df = pd.read_csv('dataset/world_air_quality_fix.csv')
+        df['Klasifikasi Kualitas Udara'] = df.apply(lambda row: classify_air_quality(row['Value'], row['Unit']), axis=1)
+    except Exception as e:
+        st.error(f"Error loading dataset: {e}")
+        return
+    
     # Sidebar menu
     with st.sidebar:
         selected = option_menu(
             "Menu",
-            ["Home", "Test Sensor", "Profile"],
-            icons=["house", "thermometer", "person-circle"],
+            ["Home", "Air Quality Monitor", "Test Sensor", "Profile"],
+            icons=["house","bar-chart", "thermometer", "person-circle"],
             menu_icon="cast",
             default_index=0,
         )
@@ -81,6 +101,53 @@ def main():
         Unit pengukuran polutan udara:
         - **ppm (parts per million):** Digunakan untuk mengukur konsentrasi gas polutan.
         """) 
+
+    # Air Quality Monitor page
+    elif selected == "Air Quality Monitor":
+        st.title("World Air Quality Monitor")
+        
+        
+        sorted_countries = df['Country Label'].sort_values().unique()
+
+        
+        country = st.selectbox('Pilih Negara', sorted_countries)
+
+        
+        country_data = df[df['Country Label'] == country]
+
+        
+        st.dataframe(country_data[['City', 'Location', 'Pollutant', 'Value', 'Unit', 'Klasifikasi Kualitas Udara']])
+
+        
+        air_quality_summary = country_data['Klasifikasi Kualitas Udara'].value_counts()
+        st.write('Ringkasan Kualitas Udara:')
+        st.bar_chart(air_quality_summary)
+
+    
+        city = st.selectbox('Pilih Kota', country_data['City'].unique())
+
+        
+        city_data = country_data[country_data['City'] == city]
+
+        
+        st.write(f'Detail Kualitas Udara di {city}:')
+        st.dataframe(city_data[['Pollutant', 'Value', 'Unit', 'Klasifikasi Kualitas Udara']])
+
+        st.write("")
+        st.write("")
+        st.write("")
+        st.write("")
+
+        chart = alt.Chart(df).mark_bar().encode(
+        x=alt.X('Country Label:O', sort=None),
+        y='count():Q',
+        color='Klasifikasi Kualitas Udara:N',
+        tooltip=['Country Label:N', 'count():Q', 'Klasifikasi Kualitas Udara:N']
+        ).properties(
+        title='Jumlah Data Kualitas Udara Berdasarkan Negara'
+        ).interactive()
+
+        st.altair_chart(chart, use_container_width=True)
 
     # Test Sensor page
     elif selected == "Test Sensor":
@@ -127,7 +194,7 @@ def main():
             else:
                 st.write("Server sedang dalam gangguan")
 
-# Profile page
+    # Profile page
     elif selected == "Profile":
         st.title("Profile Pengembang Aplikasi")
         st.header("Pengembang 1 👩🏻‍💻")
