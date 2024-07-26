@@ -80,34 +80,7 @@ def main():
         
         Unit pengukuran polutan udara:
         - **ppm (parts per million):** Digunakan untuk mengukur konsentrasi gas polutan.
-        """)
-
-        st.write("")  # Menambahkan paragraf kosong
-        st.write("")  # Menambahkan paragraf kosong
-
-    # Create an interactive chart for air quality
-    chart = alt.Chart(df).mark_bar().encode(
-        x=alt.X('Country Label:O', sort=None),
-        y='count():Q',
-        color='Klasifikasi Kualitas Udara:N',
-        tooltip=['Country Label:N', 'count():Q', 'Klasifikasi Kualitas Udara:N']
-    ).properties(
-        title='Jumlah Data Kualitas Udara Berdasarkan Negara'
-    ).interactive()
-
-    st.altair_chart(chart, use_container_width=True)
-
-    # Determine the healthiest and most polluted countries
-    summary = df.groupby('Country Label').agg(
-        Average_Value=('Value', 'mean'),
-        Classification=('Klasifikasi Kualitas Udara', lambda x: x.mode()[0])
-    ).reset_index()
-
-    st.write(f"### Negara dengan Kualitas Udara Terbaik")
-    st.write(f"- **Deskripsi:** Negara yang memiliki rata-rata nilai polutan yang paling rendah, menunjukkan kualitas udara yang sangat baik. Faktor-faktor yang mungkin berkontribusi pada kualitas udara yang baik termasuk kebijakan lingkungan yang ketat, rendahnya tingkat industri polutan, dan praktik konservasi yang baik.")
-
-    st.write(f"### Negara dengan Kualitas Udara Paling Beracun")
-    st.write(f"- **Deskripsi:** Negara yang memiliki rata-rata nilai polutan yang tertinggi, menunjukkan kualitas udara yang sangat buruk. Faktor-faktor yang mungkin berkontribusi termasuk tingkat polusi industri yang tinggi, penggunaan kendaraan bermotor yang besar, dan kurangnya regulasi lingkungan yang efektif.")   
+        """) 
 
     # Test Sensor page
     elif selected == "Test Sensor":
