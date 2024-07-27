@@ -150,7 +150,7 @@ def main():
         st.title("Test Sensor")
         st.header("Hasil Pembacaan Sensor")
 
-        response = requests.get('http://192.168.1.6:5000/get-data')
+        response = requests.get('http://IP4_ADDRESS:5000/get-data')
         if response.status_code == 200:
             data = response.json()
             df = pd.DataFrame(data)
@@ -196,7 +196,7 @@ def main():
         st.title("Profile Pengembang Aplikasi")
         st.header("Pengembang 1 👩🏻‍💻")
         st.write("""
-        Nama: aaaa
+        Nama: Adinda Rizki Sya'bana Diva
         
         Peran: Data Scientist
                 
@@ -205,7 +205,7 @@ def main():
 
         st.header("Pengembang 2 👩🏻‍💻")
         st.write("""
-        Nama: aaaa
+        Nama: Salwa Nafisa
                 
         Peran: Frontend Developer
                 
@@ -214,12 +214,13 @@ def main():
 
         st.header("Pengembang 3 👨🏻‍💻")
         st.write("""
-        Nama: aaaa
+        Nama: Rahman Ilyas Al Kahfi
                 
         Peran: Backend Developer dan IOT Engineer
                 
         Deskripsi: Bertanggung jawab dalam pengelolaan database, server, dan integrasi data ke dalam aplikasi. Selain itu Membuat Rangkaian IoT.
         """)
+
 
 if __name__ == '__main__':
     main()

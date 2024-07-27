@@ -7,8 +7,8 @@
 #define DHT_TYPE DHT11 
 #define MQ_PIN 32  
 
-const char* ssid = "FiberHome";
-const char* password = "sDDXWsrd";
+const char* ssid = "Your Wifi Name";
+const char* password = "Your Wifi Password";
 const char* serverName = "http://IP4_ADDRESS:5000/post-data"; 
 
 DHT dht(DHT_PIN, DHT_TYPE);

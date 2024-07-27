@@ -4,7 +4,7 @@ from pymongo.server_api import ServerApi
 
 app = Flask(__name__)
 
-client = MongoClient('mongodb+srv://erlinghaaland:ErlingHaalandGacor@cluster0.skwlxja.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', server_api=ServerApi('1'))
+client = MongoClient('mongodb+srv://USER:PASSWORD@cluster0.skwlxja.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', server_api=ServerApi('1'))
 db = client['sensor_data']
 collection = db['readings']
 
@@ -35,4 +35,4 @@ def get_data():
     return jsonify(list(data)), 200
 
 if __name__ == '__main__':
-    app.run(host='192.168.1.6', port=5000)
+    app.run(host='IP4_ADDRESS', port=5000)
